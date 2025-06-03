@@ -38,6 +38,11 @@ public class JwtService {
         this.jwtRepository = jwtRepository;
     }
 
+
+    /**
+     * Desactive tous les tokens actives d'un utilisateur donné
+     * @param utilisateur dont les tokens seront desactivés
+     **/
     public void disableTokens(Utilisateur utilisateur) {
         final List<Jwt> jwtList=this.jwtRepository.findUtilisateur(utilisateur.getEmail()).peek(
                jwt -> {
@@ -49,14 +54,25 @@ public class JwtService {
         this.jwtRepository.saveAll(jwtList);
     }
 
+    /**
+     * Extracts username from JWT token
+     * @param token JWT token
+     * @return username
+     */
     public String extractUsername(String token) {
         return this.getClaim(token, Claims::getSubject);
     }
 
+    /**
+     * Checks if token is expired
+     * @param token JWT token
+     * @return true if expired, false otherwise
+     */
     public boolean isTokenExpired(String token) {
         Date expirationDate= this.getClaim(token, Claims::getExpiration);
         return expirationDate.before(new Date());
     }
+
     public Jwt tokenByValue(String token) {
        return this.jwtRepository.findByValeur(token)
                 .orElseThrow(()-> new RuntimeException("token inconnu"));
