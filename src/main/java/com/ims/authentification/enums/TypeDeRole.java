@@ -1,4 +1,6 @@
 package com.ims.authentification.enums;
 
-public enum TypeDeRole {
+public enum TypeDeRole{
+    UTILISATEUR,
+    ADMINISTRATEUR,
 }
